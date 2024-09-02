@@ -1,18 +1,43 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-pager-view-x';
+import {
+  Button,
+  Dimensions,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { PagerViewX } from 'react-native-pager-view-x';
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
-
-  useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
-
   return (
-    <View style={styles.container}>
-      <Text>Result: {result}</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View
+        style={{
+          height: 50,
+          backgroundColor: 'white',
+          flexDirection: 'row',
+          alignSelf: 'stretch',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Text>Header</Text>
+      </View>
+
+      <PagerViewX initialPage={1}>
+        <View
+          style={{
+            flex: 1,
+            width: Dimensions.get('window').width,
+            backgroundColor: 'red',
+          }}
+        >
+          <Button title={'Click me'} onPress={() => {}} />
+        </View>
+        <View style={{ flex: 1, backgroundColor: 'blue' }} />
+        <View style={{ flex: 1, backgroundColor: 'green' }} />
+      </PagerViewX>
+    </SafeAreaView>
   );
 }
 
@@ -21,10 +46,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
   },
 });
