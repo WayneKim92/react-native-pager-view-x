@@ -5,6 +5,8 @@ import React, {
   useMemo,
   useRef,
   useState,
+  forwardRef,
+  useImperativeHandle,
 } from 'react';
 import {
   type NativeSyntheticEvent,
@@ -15,19 +17,28 @@ import {
 } from 'react-native';
 import { LazyComponent } from './LazyComponent';
 
-interface PagerViewProps {
+export type PagerViewXRef = {
+  setScrollEnabled: (enabled: boolean) => void;
+};
+
+interface PagerViewXProps {
   initialPage?: number;
   scrollEnabled?: boolean;
   onPageScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   children?: React.ReactElement | React.ReactElement[];
 }
 
-export function PagerViewX(props: PagerViewProps) {
+function PagerViewX(
+  props: PagerViewXProps,
+  ref: React.Ref<PagerViewXRef> | undefined
+) {
   const { scrollEnabled, children, onPageScroll, initialPage, ...otherProps } =
     props;
 
   const flatListRef = useRef<FlatList>(null);
   const [page, setPage] = useState(initialPage ?? 0);
+  const [currentScrollEnabled, setCurrentScrollEnabled] =
+    useState(scrollEnabled);
   const data = useMemo(
     () => React.Children.toArray(children) as ArrayLike<ReactElement>,
     [children]
@@ -46,6 +57,12 @@ export function PagerViewX(props: PagerViewProps) {
     ),
     [page, windowWidth]
   );
+
+  useImperativeHandle(ref, () => ({
+    setScrollEnabled: (enabled: boolean) => {
+      setCurrentScrollEnabled(enabled);
+    },
+  }));
 
   useEffect(() => {
     if (initialPage) {
@@ -77,7 +94,7 @@ export function PagerViewX(props: PagerViewProps) {
       })}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
-      scrollEnabled={scrollEnabled}
+      scrollEnabled={currentScrollEnabled}
       viewabilityConfig={{
         itemVisiblePercentThreshold: 100,
         waitForInteraction: false,
@@ -100,3 +117,5 @@ export function PagerViewX(props: PagerViewProps) {
     />
   );
 }
+
+export default forwardRef(PagerViewX);

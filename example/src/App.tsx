@@ -6,9 +6,13 @@ import {
   Text,
   View,
 } from 'react-native';
-import { PagerViewX } from 'react-native-pager-view-x';
+import PagerViewX, { type PagerViewXRef } from 'react-native-pager-view-x';
+import { useRef } from 'react';
 
 export default function App() {
+  const pagerViewXRef = useRef<PagerViewXRef>(null);
+  const scrollEnabledRef = useRef(true);
+
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -24,7 +28,7 @@ export default function App() {
         <Text>Header</Text>
       </View>
 
-      <PagerViewX initialPage={1}>
+      <PagerViewX ref={pagerViewXRef} initialPage={1}>
         <View
           style={{
             flex: 1,
@@ -32,7 +36,15 @@ export default function App() {
             backgroundColor: 'red',
           }}
         >
-          <Button title={'Click me'} onPress={() => {}} />
+          <Button
+            title={'toggle setScrollEnabled'}
+            onPress={() => {
+              pagerViewXRef.current?.setScrollEnabled(
+                !scrollEnabledRef.current
+              );
+              scrollEnabledRef.current = !scrollEnabledRef.current;
+            }}
+          />
         </View>
         <View style={{ flex: 1, backgroundColor: 'blue' }} />
         <View style={{ flex: 1, backgroundColor: 'green' }} />
