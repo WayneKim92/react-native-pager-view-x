@@ -28,6 +28,7 @@ interface PagerViewXProps {
   scrollEnabled?: boolean;
   onPageScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   children?: React.ReactElement | React.ReactElement[];
+  [key: string]: any;
 }
 
 function PagerViewX(
