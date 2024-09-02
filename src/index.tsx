@@ -18,6 +18,8 @@ import {
 import { LazyComponent } from './LazyComponent';
 
 export type PagerViewXRef = {
+  setPage: (page: number) => void;
+  setPageWithoutAnimation: (page: number) => void;
   setScrollEnabled: (enabled: boolean) => void;
 };
 
@@ -36,7 +38,7 @@ function PagerViewX(
     props;
 
   const flatListRef = useRef<FlatList>(null);
-  const [page, setPage] = useState(initialPage ?? 0);
+  const [currentPage, setCurrentPage] = useState(initialPage ?? 0);
   const [currentScrollEnabled, setCurrentScrollEnabled] =
     useState(scrollEnabled);
   const data = useMemo(
@@ -51,14 +53,40 @@ function PagerViewX(
     ({ item, index }) => (
       <LazyComponent
         componentKey={index}
-        currentKey={page}
+        currentKey={currentPage}
         component={<View style={{ width: windowWidth }}>{item}</View>}
       />
     ),
-    [page, windowWidth]
+    [currentPage, windowWidth]
   );
 
   useImperativeHandle(ref, () => ({
+    setPage: (page: number) => {
+      if (page < 0 || page >= data.length) {
+        console.warn(
+          `PagerViewX: setPage ${page} is out of bounds [0, ${data.length - 1}]`
+        );
+        return;
+      }
+
+      flatListRef.current?.scrollToIndex({
+        index: page,
+        animated: true,
+      });
+    },
+    setPageWithoutAnimation: (page: number) => {
+      if (page < 0 || page >= data.length) {
+        console.warn(
+          `PagerViewX: setPageWithoutAnimation ${page} is out of bounds [0, ${data.length - 1}]`
+        );
+        return;
+      }
+
+      flatListRef.current?.scrollToIndex({
+        index: page,
+        animated: false,
+      });
+    },
     setScrollEnabled: (enabled: boolean) => {
       setCurrentScrollEnabled(enabled);
     },
@@ -107,7 +135,7 @@ function PagerViewX(
           viewableItems[0].index !== undefined &&
           viewableItems[0].index !== null
         ) {
-          setPage(viewableItems[0].index);
+          setCurrentPage(viewableItems[0].index);
         }
       }}
       data={data}
