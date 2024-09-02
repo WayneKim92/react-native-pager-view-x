@@ -5,9 +5,10 @@ interface LazyComponentProps {
   componentKey: number;
   currentKey: number;
   component: React.ReactNode;
+  activityIndicator?: React.ReactNode;
 }
 export const LazyComponent = (props: LazyComponentProps) => {
-  const { componentKey, currentKey, component } = props;
+  const { componentKey, currentKey, component, activityIndicator } = props;
 
   const [hasRendered, setHasRendered] = useState(false);
 
@@ -28,7 +29,7 @@ export const LazyComponent = (props: LazyComponentProps) => {
         justifyContent: 'center',
       }}
     >
-      <ActivityIndicator />
+      {activityIndicator ? activityIndicator : <ActivityIndicator />}
     </View>
   );
 };

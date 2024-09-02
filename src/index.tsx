@@ -28,6 +28,7 @@ interface PagerViewXProps {
   scrollEnabled?: boolean;
   onPageScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   children?: React.ReactElement | React.ReactElement[];
+  activityIndicator?: React.ReactNode;
   [key: string]: any;
 }
 
@@ -35,8 +36,14 @@ function PagerViewX(
   props: PagerViewXProps,
   ref: React.Ref<PagerViewXRef> | undefined
 ) {
-  const { scrollEnabled, children, onPageScroll, initialPage, ...otherProps } =
-    props;
+  const {
+    scrollEnabled,
+    children,
+    onPageScroll,
+    initialPage,
+    activityIndicator,
+    ...otherProps
+  } = props;
 
   const flatListRef = useRef<FlatList>(null);
   const [currentPage, setCurrentPage] = useState(initialPage ?? 0);
@@ -56,9 +63,10 @@ function PagerViewX(
         componentKey={index}
         currentKey={currentPage}
         component={<View style={{ width: windowWidth }}>{item}</View>}
+        activityIndicator={activityIndicator}
       />
     ),
-    [currentPage, windowWidth]
+    [activityIndicator, currentPage, windowWidth]
   );
 
   useImperativeHandle(ref, () => ({
