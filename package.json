@@ -1,6 +1,6 @@
 {
   "name": "react-native-pager-view-x",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Are you debugging due to react-native-pager-view?",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
