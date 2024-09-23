@@ -133,6 +133,7 @@ function PagerViewX(
       showsHorizontalScrollIndicator={false}
       scrollEnabled={currentScrollEnabled}
       viewabilityConfig={{
+        minimumViewTime: 10,
         itemVisiblePercentThreshold: 100,
         waitForInteraction: false,
       }}
